@@ -140,9 +140,13 @@ func (c *Connection) SetBasicAuth(username, password string) {
 
 func (c *Connection) Resource(source string, params *url.Values) (*[]byte, error) {
 	params.Set("wt", "json")
-	r, err := HTTPGet(fmt.Sprintf("%s/%s/%s?%s", c.url.String(), c.core, source, params.Encode()), nil, c.username, c.password)
-	return &r, err
 
+	url := fmt.Sprintf("%s/%s/%s", c.url.String(), c.core, source)
+	headers := [][]string{{"Content-Type", "application/x-www-form-urlencoded"}}
+	paramBytes := []byte(params.Encode())
+	r, err := HTTPPost(url, &paramBytes, headers, "", "")
+
+	return &r, err
 }
 
 // Update take optional params which can use to specify addition parameters such as commit=true
