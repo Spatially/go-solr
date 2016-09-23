@@ -141,10 +141,16 @@ func (c *Connection) SetBasicAuth(username, password string) {
 func (c *Connection) Resource(source string, params *url.Values) (*[]byte, error) {
 	params.Set("wt", "json")
 
-	url := fmt.Sprintf("%s/%s/%s", c.url.String(), c.core, source)
+	requestURL := fmt.Sprintf("%s/%s/%s", c.url.String(), c.core, source)
 	headers := [][]string{{"Content-Type", "application/x-www-form-urlencoded"}}
-	paramBytes := []byte(params.Encode())
-	r, err := HTTPPost(url, &paramBytes, headers, "", "")
+
+	p, err := url.QueryUnescape(params.Encode())
+	if err != nil {
+		return nil, err
+	}
+
+	paramBytes := []byte(p)
+	r, err := HTTPPost(requestURL, &paramBytes, headers, "", "")
 
 	return &r, err
 }

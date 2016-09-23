@@ -121,6 +121,7 @@ func (parser *StandardResultParser) Parse(resp_ *[]byte) (*SolrResult, error) {
 	if err != nil {
 		return sr, err
 	}
+
 	response := new(SolrResponse)
 	response.Response = jsonbuf
 	response.Status = int(jsonbuf["responseHeader"].(map[string]interface{})["status"].(float64))
